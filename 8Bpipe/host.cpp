@@ -15,8 +15,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
-//macalleria venezia
-
 cl_platform_id platform_id;         // platform id
 cl_device_id device_id;             // compute device id 
 cl_context context;                 // compute context
