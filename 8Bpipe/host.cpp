@@ -25,9 +25,9 @@ cl_program program;                 // compute program
 cl_kernel kernel0;              // compute kernel
 cl_kernel kernel1;             // compute kernel
 
-HOST_LLONG data[] = {0x1000000020000000, 0x1111111121111111, 0x1222222222222222, 0x1333333323333333, 0x1444444424444444, 0x1555555525555555, 0x1666666626666666, 0x1777777727777777, 0x1888888828888888, 0x1999999929999999, 0x1aaaaaaa2aaaaaaa, 0x1bbbbbbb2bbbbbbb, 0x1ccccccc2ccccccc, 0x1ddddddd2ddddddd, 0x1eeeeeee2eeeeeee, 0x1fffffff2fffffff};
-HOST_LLONG *h_input;
-HOST_LLONG *h_output;
+cl_long data[] = {0x1000000020000000, 0x1111111121111111, 0x1222222222222222, 0x1333333323333333, 0x1444444424444444, 0x1555555525555555, 0x1666666626666666, 0x1777777727777777, 0x1888888828888888, 0x1999999929999999, 0x1aaaaaaa2aaaaaaa, 0x1bbbbbbb2bbbbbbb, 0x1ccccccc2ccccccc, 0x1ddddddd2ddddddd, 0x1eeeeeee2eeeeeee, 0x1fffffff2fffffff};
+cl_long *h_input;
+cl_long *h_output;
 
 cl_mem d_input;
 cl_mem d_output;
@@ -61,8 +61,8 @@ void init_device(){
     char cl_platform_vendor[1001];
     char cl_platform_name[1001];
 
-    h_input  = (HOST_LLONG *) malloc(sizeof(HOST_LLONG)*MAX_REC_N);
-    h_output = (HOST_LLONG *) malloc(sizeof(HOST_LLONG)*MAX_REC_N);
+    h_input  = (cl_long *) malloc(sizeof(cl_long)*MAX_REC_N);
+    h_output = (cl_long *) malloc(sizeof(cl_long)*MAX_REC_N);
 
     err = clGetPlatformIDs(1,&platform_id,NULL);
     if (err != CL_SUCCESS)
@@ -182,8 +182,8 @@ void init_device(){
 
     // Create the input and output arrays in device memory for our calculation
     //
-    d_input    = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(HOST_LLONG)*MAX_REC_N, NULL, NULL);
-    d_output   = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(HOST_LLONG)*MAX_REC_N, NULL, NULL);
+    d_input    = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(cl_long)*MAX_REC_N, NULL, NULL);
+    d_output   = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(cl_long)*MAX_REC_N, NULL, NULL);
 
     if (!d_input || !d_output) {
         printf("Error: Failed to allocate device memory!\n");
@@ -218,11 +218,11 @@ void write_value(){
     }
     printf("[host] inputs:\n");
     for (int i = 0; i < MAX_REC_N; ++i) {
-        printf("%llx ", h_input[i]);
+        printf("%lx ", h_input[i]);
     }
     printf("\n");
     int err;
-    err = clEnqueueWriteBuffer(commands, d_input, CL_TRUE, 0, MAX_REC_N*sizeof(HOST_LLONG), h_input, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(commands, d_input, CL_TRUE, 0, MAX_REC_N*sizeof(cl_long), h_input, 0, NULL, NULL);
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to write to source array input0!\n");
@@ -268,7 +268,7 @@ void read_value(){
     int err;
     cl_event readevent;
     err = clEnqueueReadBuffer(commands, d_output, CL_TRUE, 0,
-                              MAX_REC_N * sizeof(HOST_LLONG),
+                              MAX_REC_N * sizeof(cl_long),
                               h_output, 0, NULL, &readevent);
     if (err != CL_SUCCESS)
     {
@@ -281,7 +281,7 @@ void read_value(){
 
     printf("\n[host] outputs:\n");
     for (int i = 0; i < MAX_REC_N; ++i) {
-        printf("%llx ", h_output[i]);
+        printf("%lx ", h_output[i]);
     }
     printf("\n");
 }

@@ -1,11 +1,11 @@
 #include "myheader.h"
 
-pipe XOCL_LLONG p0 __attribute__((xcl_reqd_pipe_depth(MAX_REC_N)));
+pipe long p0 __attribute__((xcl_reqd_pipe_depth(MAX_REC_N)));
 
 kernel __attribute__((reqd_work_group_size(1, 1, 1)))
-void kernel0(__global XOCL_LLONG *g_input)
+void kernel0(__global long *g_input)
 {
-    __local XOCL_LLONG l_input[MAX_REC_N];
+    __local long l_input[MAX_REC_N];
 
     async_work_group_copy(l_input, g_input, MAX_REC_N, 0);
 
@@ -23,9 +23,9 @@ void kernel0(__global XOCL_LLONG *g_input)
 }
 
 kernel __attribute__((reqd_work_group_size(1, 1, 1)))
-void kernel1(__global XOCL_LLONG *g_output)
+void kernel1(__global long *g_output)
 {
-    __local XOCL_LLONG l_output[MAX_REC_N];
+    __local long l_output[MAX_REC_N];
 
     printf("\n[kernel1] after pipe:\n", get_pipe_max_packets(p0));
     for (int i = 0; i < MAX_REC_N; ) {
